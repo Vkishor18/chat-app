@@ -41,7 +41,7 @@ const ProviderBlock = () => {
     unlink('google.com');
   };
 
-  const link = async provider => {
+  const link = async (provider) => {
     try {
       await auth.currentUser.linkWithPopup(provider);
       Alert.info(`Linked to ${provider.providerId}`, 4000);
