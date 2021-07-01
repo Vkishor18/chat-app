@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Button, Alert } from 'rsuite';
 import AvatarEditor from 'react-avatar-editor';
+import ProfileAvatar from '../ProfileAvatar';
 import { useModalState } from '../../misc/custom-hooks';
 import { database, storage } from '../../misc/firebase';
 import { useProfile } from '../../context/profile.context';
@@ -60,7 +61,7 @@ const AvatarUploadBtn = () => {
         cacheControl: `public, max-age=${3600 * 24 * 3}`,
       });
 
-      const downloadUrl = uploadAvatarResult.ref.getDownloadURL();
+      const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
 
       const userAvatarRef = database
         .ref(`/profile/${profile.uid}`)
@@ -78,6 +79,11 @@ const AvatarUploadBtn = () => {
 
   return (
     <div className="mt-3 text-center">
+      <ProfileAvatar
+        src={profile.avatar}
+        name={profile.name}
+        className="width-200 height-200 img-fullsize font-huge "
+      />
       <div>
         <label
           htmlFor="avatar-upload"
