@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import { auth, database } from '../misc/firebase';
 
-const isOfflineForDatabase = {
+export const isOfflineForDatabase = {
   state: 'offline',
   last_changed: firebase.database.ServerValue.TIMESTAMP,
 };
@@ -60,12 +60,14 @@ export const ProfileProvider = ({ children }) => {
           userStatusRef.off();
         }
 
+        database.ref('.info/connected').off();
         setProfile(null);
         setIsLoading(false);
       }
     });
     return () => {
       authUnsub();
+      database.ref('.info/connected').off();
       if (userRef) {
         userRef.off();
       }
