@@ -6,19 +6,24 @@ import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 import PresenceDot from '../../PresenceDot';
 import { useCurrentRoom } from '../../../context/current-room.context';
 import { auth } from '../../../misc/firebase';
-import { useHover } from '../../../misc/custom-hooks';
+import { useHover, useMediaQuery } from '../../../misc/custom-hooks';
 import IconBtnControl from './IconBtnControl';
 
 const MessageItem = ({ message, handleAdmin, handleLike }) => {
-  const { author, createdAt, text } = message;
-  const isAdmin = useCurrentRoom(v => v.isAdmin);
-  const Admins = useCurrentRoom(v => v.Admins);
+  const { author, createdAt, text, likes, likeCount } = message;
 
   const [selfRef, isHovered] = useHover();
+  const isMobile = useMediaQuery('(max-width: 992px)');
+
+  const isAdmin = useCurrentRoom(v => v.isAdmin);
+  const Admins = useCurrentRoom(v => v.Admins);
 
   const isMsgAuthorAdmin = Admins.includes(author.uid);
   const isAuthor = auth.currentUser.uid === author.uid;
   const canGrantAdmin = isAdmin && !isAuthor;
+
+  const canShowIcon = isMobile || isHovered;
+  const isLiked = likes && Object.keys(likes).includes(auth.currentUser.uid);
 
   return (
     <li
@@ -52,12 +57,12 @@ const MessageItem = ({ message, handleAdmin, handleLike }) => {
         />
         <IconBtnControl
           // eslint-disable-next-line no-constant-condition
-          {...(true ? { color: 'red' } : {})}
-          isVisible
+          {...(isLiked ? { color: 'red' } : {})}
+          isVisible={canShowIcon}
           iconName="heart"
           tooltip="Like this message"
-          onClick={() => handleLike()}
-          badgeContent={5}
+          onClick={() => handleLike(message.id)}
+          badgeContent={likeCount}
         />
       </div>
       <div>

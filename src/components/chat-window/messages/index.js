@@ -60,12 +60,11 @@ const Messages = () => {
     await messageRef.transaction(msg => {
       if (msg) {
         if (msg.likes && msg.likes[uid]) {
-          msg.likeCount -= 1;
+          msg.likeCount = msg.likeCount ? msg.likeCount - 1 : 0
           msg.likes[uid] = null;
           alertMsg = 'Like removed';
         } else {
-          msg.likeCount += 1;
-
+          msg.likeCount = msg.likeCount ? msg.likeCount + 1 : 1
           if (!msg.likes) {
             msg.likes = {};
           }
