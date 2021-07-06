@@ -15,13 +15,14 @@ function assembleMessage(profile, chatId) {
       ...(profile.avatar ? { avatar: profile.avatar } : {}),
     },
     createdAt: firebase.database.ServerValue.TIMESTAMP,
+    likeCount: 0,
   };
 }
 
 const Bottom = () => {
   const [input, setInput] = useState('');
-  const[isLoading , setIsLoading] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const { profile } = useProfile();
   const { chatId } = useParams();
 
@@ -29,43 +30,41 @@ const Bottom = () => {
     setInput(value);
   }, []);
 
-  
   const onSendClick = async () => {
     if (input.trim() === '') {
       return;
     }
-    
+
     const msgData = assembleMessage(profile, chatId);
     msgData.text = input;
-    
+
     const updates = {};
-    
+
     const messageId = database.ref('messages').push().key;
     updates[`/messages/${messageId}`] = msgData;
     updates[`/rooms/${chatId}/lastMessage`] = {
       ...msgData,
       msgId: messageId,
     };
-    
+
     setIsLoading(true);
     try {
       await database.ref().update(updates);
 
       setInput('');
       setIsLoading(false);
-      
     } catch (err) {
       setIsLoading(false);
       Alert.error(err.message, 4000);
     }
   };
-  
-  const onKeyDown = (ev) =>{
-    if(ev.keyCode === 13){
+
+  const onKeyDown = ev => {
+    if (ev.keyCode === 13) {
       ev.preventDefault();
       onSendClick();
     }
-  }
+  };
 
   return (
     <div>
