@@ -124,7 +124,7 @@ const Messages = () => {
   );
 
   const renderMessages = () => {
-    const groups = groupByFun(item => new Date(item.createdAt).toDateString());
+    const groups = groupByFun(messages , item => new Date(item.createdAt).toDateString());
 
     const items = [];
 
