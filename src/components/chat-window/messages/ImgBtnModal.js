@@ -6,7 +6,7 @@ const ImgBtnModal = ({ src, fileName }) => {
   const { isOpen, open, close } = useModalState();
 
   return (
-    <div>
+    <>
       <input
         type="image"
         src={src}
@@ -29,7 +29,7 @@ const ImgBtnModal = ({ src, fileName }) => {
           </a>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 
